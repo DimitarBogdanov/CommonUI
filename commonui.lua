@@ -1,10 +1,16 @@
 local CommonUI = {}
 CommonUI.__index = CommonUI
 
-local UUID = require("/utils/uuid")
-
 local ShiftHeld = false
 local CtrlHeld = false
+
+function NewUuid()
+	local template ='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+    return string.gsub(template, '[xy]', function (c)
+		local v = (c == 'x') and math.random(0, 0xf) or math.random(8, 0xb)
+		return string.format('%x', v)
+    end)
+end
 
 --------------------------------------------------
 -- BUILT-IN COMPONENTS                          --
@@ -414,7 +420,7 @@ function CommonUI.new()
 	local new = {}
 	setmetatable(new, CommonUI)
 	
-	new.Id = UUID.NewUuid()
+	new.Id = NewUuid()
 	new.Components = {}
 	new.CurrentFocusedComponent = nil
 	
@@ -437,7 +443,7 @@ function CommonUI:AddComponent(component)
         error("All components must have an EndY number")
     end
     
-    local id = UUID.NewUuid()
+    local id = NewUuid()
     
     component._CID = id
     table.insert(self.Components, component)
